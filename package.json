@@ -1,7 +1,7 @@
 {
   "name": "superset-plugin-chart-leaflet-gobar",
   "version": "0.1.0",
-  "description": "Superset Plugin Chart Leaflet Gobar",
+  "description": "Superset Plugin Chart - Leaflet with markers and IGN.gob.ar TileLayer",
   "sideEffects": false,
   "main": "lib/index.js",
   "module": "esm/index.js",
@@ -9,7 +9,7 @@
     "esm",
     "lib"
   ],
-  "private": true,
+  "private": false,
   "scripts": {
     "build": "npm run build-cjs && npm run build-esm && npm run ts-types",
     "build-cjs": "babel src --extensions \".ts,.tsx,.js,.jsx\" --copy-files --out-dir lib",
@@ -21,10 +21,15 @@
     "ts-types": "tsc --build",
     "test": "jest"
   },
-  "author": "My Name",
+  "author": "Ema Guillén (https://github.com/baldosa)",
   "license": "Apache-2.0",
   "publishConfig": {
     "access": "public"
+  },
+  "homepage": "https://github.com/datos-desarrollosocial-nacion/superset-plugin-chart-leaflet-gobar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/datos-desarrollosocial-nacion/superset-plugin-chart-leaflet-gobar"
   },
   "dependencies": {
     "react-dom": "^16.13.1",
