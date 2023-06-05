@@ -26,9 +26,7 @@ describe('SupersetPluginChartLeafletGobar transformProps', () => {
     granularity_sqla: 'ds',
     metric: 'sum__num',
     series: 'name',
-    boldText: true,
-    headerFontSize: 'xs',
-    headerText: 'my text',
+    
   };
   const chartProps = new ChartProps({
     formData,
@@ -43,9 +41,6 @@ describe('SupersetPluginChartLeafletGobar transformProps', () => {
     expect(transformProps(chartProps)).toEqual({
       width: 800,
       height: 600,
-      boldText: true,
-      headerFontSize: 'xs',
-      headerText: 'my text',
       data: [{ name: 'Hulk', sum__num: 1 }],
     });
   });
