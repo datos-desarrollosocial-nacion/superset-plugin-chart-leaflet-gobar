@@ -16,85 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { t, validateNonEmpty } from '@superset-ui/core';
-import { ControlPanelConfig, sections, sharedControls } from '@superset-ui/chart-controls';
+import { FeatureFlag, isFeatureEnabled, t, validateNonEmpty } from '@superset-ui/core';
+import {
+  ControlPanelConfig, sections, columnChoices, ControlPanelState, sharedControls } from '@superset-ui/chart-controls';
+
+
+const allColumns = {
+  type: 'SelectControl',
+  default: null,
+  mapStateToProps: (state: ControlPanelState) => ({
+    choices: columnChoices(state.datasource),
+  }),
+};
+
+const columnsConfig = isFeatureEnabled(FeatureFlag.ENABLE_EXPLORE_DRAG_AND_DROP)
+  ? sharedControls.entity
+  : allColumns;
+
 
 const config: ControlPanelConfig = {
-  /**
-   * The control panel is split into two tabs: "Query" and
-   * "Chart Options". The controls that define the inputs to
-   * the chart data request, such as columns and metrics, usually
-   * reside within "Query", while controls that affect the visual
-   * appearance or functionality of the chart are under the
-   * "Chart Options" section.
-   *
-   * There are several predefined controls that can be used.
-   * Some examples:
-   * - groupby: columns to group by (translated to GROUP BY statement)
-   * - series: same as groupby, but single selection.
-   * - metrics: multiple metrics (translated to aggregate expression)
-   * - metric: sane as metrics, but single selection
-   * - adhoc_filters: filters (translated to WHERE or HAVING
-   *   depending on filter type)
-   * - row_limit: maximum number of rows (translated to LIMIT statement)
-   *
-   * If a control panel has both a `series` and `groupby` control, and
-   * the user has chosen `col1` as the value for the `series` control,
-   * and `col2` and `col3` as values for the `groupby` control,
-   * the resulting query will contain three `groupby` columns. This is because
-   * we considered `series` control a `groupby` query field and its value
-   * will automatically append the `groupby` field when the query is generated.
-   *
-   * It is also possible to define custom controls by importing the
-   * necessary dependencies and overriding the default parameters, which
-   * can then be placed in the `controlSetRows` section
-   * of the `Query` section instead of a predefined control.
-   *
-   * import { validateNonEmpty } from '@superset-ui/core';
-   * import {
-   *   sharedControls,
-   *   ControlConfig,
-   *   ControlPanelConfig,
-   * } from '@superset-ui/chart-controls';
-   *
-   * const myControl: ControlConfig<'SelectControl'> = {
-   *   name: 'secondary_entity',
-   *   config: {
-   *     ...sharedControls.entity,
-   *     type: 'SelectControl',
-   *     label: t('Secondary Entity'),
-   *     mapStateToProps: state => ({
-   *       sharedControls.columnChoices(state.datasource)
-   *       .columns.filter(c => c.groupby)
-   *     })
-   *     validators: [validateNonEmpty],
-   *   },
-   * }
-   *
-   * In addition to the basic drop down control, there are several predefined
-   * control types (can be set via the `type` property) that can be used. Some
-   * commonly used examples:
-   * - SelectControl: Dropdown to select single or multiple values,
-       usually columns
-   * - MetricsControl: Dropdown to select metrics, triggering a modal
-       to define Metric details
-   * - AdhocFilterControl: Control to choose filters
-   * - CheckboxControl: A checkbox for choosing true/false values
-   * - SliderControl: A slider with min/max values
-   * - TextControl: Control for text data
-   *
-   * For more control input types, check out the `incubator-superset` repo
-   * and open this file: superset-frontend/src/explore/components/controls/index.js
-   *
-   * To ensure all controls have been filled out correctly, the following
-   * validators are provided
-   * by the `@superset-ui/core/lib/validator`:
-   * - validateNonEmpty: must have at least one value
-   * - validateInteger: must be an integer value
-   * - validateNumber: must be an integer or decimal value
-   */
-
-  // For control input types, see: superset-frontend/src/explore/components/controls/index.js
   controlPanelSections: [
     sections.legacyRegularTime,
     {
@@ -103,22 +43,44 @@ const config: ControlPanelConfig = {
       controlSetRows: [
         [
           {
-            name: 'cols',
+            name: 'longitude',
             config: {
-              ...sharedControls.groupby,
-              label: t('Columns'),
-              description: t('Columns to group by'),
+              ...columnsConfig,
+              label: t('Longitude'),
+              description: t('Column containing longitude data'),
+              validators: [validateNonEmpty],
             },
           },
         ],
         [
           {
-            name: 'metrics',
+            name: 'latitude',
             config: {
-              ...sharedControls.metrics,
-              // it's possible to add validators to controls if
-              // certain selections/types need to be enforced
+              ...columnsConfig,
+              label: t('Latitude'),
+              description: t('Column containing latitude data'),
               validators: [validateNonEmpty],
+            },
+          },
+        ],
+        [
+          {
+            name: 'cols',
+            config: {
+              ...sharedControls.groupby,
+              label: t('Columns'),
+              description: t('Columns to advanced popup'),
+            },
+          },
+        ],
+        [
+          {
+            name: 'js_funct',
+            config: {
+              type: 'TextAreaControl',
+              label: t('Function to parse popup'),
+              height: 100,
+              description: t('Function to pass data to popup'),
             },
           },
         ],
@@ -132,53 +94,71 @@ const config: ControlPanelConfig = {
       ],
     },
     {
-      label: t('Hello Controls!'),
+      label: t('Customize'),
       expanded: true,
       controlSetRows: [
         [
           {
-            name: 'header_text',
+            name: 'zoom',
             config: {
               type: 'TextControl',
-              default: 'Hello, World!',
+              default: '3',
               renderTrigger: true,
               // ^ this makes it apply instantaneously, without triggering a "run query" button
-              label: t('Header Text'),
-              description: t('The text you want to see in the header'),
+              label: t('Zoom'),
+              description: t('Zoom level'),
             },
           },
         ],
         [
           {
-            name: 'bold_text',
+            name: 'center_lat',
             config: {
-              type: 'CheckboxControl',
-              label: t('Bold Text'),
+              type: 'TextControl',
+              default: '-34.6027453',
               renderTrigger: true,
-              default: true,
-              description: t('A checkbox to make the '),
+              // ^ this makes it apply instantaneously, without triggering a "run query" button
+              label: t('Center Latitude'),
+              description: t('Center Latitude'),
             },
           },
         ],
         [
           {
-            name: 'header_font_size',
+            name: 'center_lon',
             config: {
-              type: 'SelectControl',
-              label: t('Font Size'),
-              default: 'xl',
-              choices: [
-                // [value, label]
-                ['xxs', 'xx-small'],
-                ['xs', 'x-small'],
-                ['s', 'small'],
-                ['m', 'medium'],
-                ['l', 'large'],
-                ['xl', 'x-large'],
-                ['xxl', 'xx-large'],
-              ],
+              type: 'TextControl',
+              default: '-58.3595097',
               renderTrigger: true,
-              description: t('The size of your header font'),
+              // ^ this makes it apply instantaneously, without triggering a "run query" button
+              label: t('Center longitude'),
+              description: t('Center longitude'),
+            },
+          },
+        ],
+        [
+          {
+            name: 'tilelayer',
+            config: {
+              type: 'TextControl',
+              default: 'https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{-y}.png',
+              renderTrigger: true,
+              // ^ this makes it apply instantaneously, without triggering a "run query" button
+              label: t('Tile URL'),
+              description: t('Tile URL'),
+            },
+          },
+        ],
+        [
+          {
+            name: 'attribution',
+            config: {
+              type: 'TextControl',
+              default: '&copy; <a href="http://www.ign.gob.ar/AreaServicios/Argenmap/IntroduccionV2" target="_blank">Instituto Geográfico Nacional</a> + <a href="http://www.osm.org/copyright" target="_blank">OpenStreetMap</a>',
+              renderTrigger: true,
+              // ^ this makes it apply instantaneously, without triggering a "run query" button
+              label: t('Attribution'),
+              description: t('Attribution tag'),
             },
           },
         ],

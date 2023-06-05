@@ -37,4 +37,13 @@ export type SupersetPluginChartLeafletGobarProps = SupersetPluginChartLeafletGob
   SupersetPluginChartLeafletGobarCustomizeProps & {
     data: TimeseriesDataRecord[];
     // add typing here for the props you pass in from transformProps.ts!
+    latitude: 'string',
+    longitude: 'string',
+    cols: 'string',
+    jsFunct: 'string',
+    zoom: 'string',
+    centerLat: 'string',
+    centerLon: 'string',
+    tilelayer: 'string',
+    attribution: 'string',
   };
