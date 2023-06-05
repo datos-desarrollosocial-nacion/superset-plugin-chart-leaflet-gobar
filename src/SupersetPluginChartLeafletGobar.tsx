@@ -16,8 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { useMemo, useEffect, createRef } from 'react';
-import L, { Icon } from 'leaflet';
+import React, { useEffect, createRef } from 'react';
+import { Icon } from 'leaflet';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 
@@ -819,7 +819,6 @@ export default function SupersetPluginChartLeafletGobar(props: SupersetPluginCha
   // There is also a `data` prop, which is, of course, your DATA 🎉
   const { data, height, width, latitude,
     longitude,
-    cols,
     jsFunct,
     zoom,
     centerLat,
@@ -832,8 +831,8 @@ export default function SupersetPluginChartLeafletGobar(props: SupersetPluginCha
   // Often, you just want to access the DOM and do whatever you want.
   // Here, you can do that with createRef, and the useEffect hook.
   useEffect(() => {
-    const root = rootElem.current as HTMLElement;
-    // console.log('Plugin element', root);
+    // const root = rootElem.current as HTMLElement;
+    // // console.log('Plugin element', root);
   });
 
   console.log('Plugin props', props);
