@@ -1,6 +1,6 @@
 # superset-plugin-chart-leaflet-gobar
 
-This is the Superset Plugin Chart Leaflet Gobar Superset Chart Plugin.
+Leaflet plugin for superset, with leaflet-markcluster. Default tile from [IGN](https://www.ign.gob.ar/NuestrasActividades/InformacionGeoespacial/ServiciosOGC/Leaflet)
 
 ### Usage
 
