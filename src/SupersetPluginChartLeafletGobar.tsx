@@ -824,7 +824,8 @@ export default function SupersetPluginChartLeafletGobar(props: SupersetPluginCha
     centerLat,
     centerLon,
     tilelayer,
-    attribution, } = props;
+    attribution, 
+    showPopup } = props;
 
   const rootElem = createRef<HTMLDivElement>();
 
@@ -832,11 +833,11 @@ export default function SupersetPluginChartLeafletGobar(props: SupersetPluginCha
   // Here, you can do that with createRef, and the useEffect hook.
   useEffect(() => {
     // const root = rootElem.current as HTMLElement;
-    // // console.log('Plugin element', root);
+    // console.log('Plugin element', root);
   });
 
-  console.log('Plugin props', props);
-  
+  // console.log('Plugin props', props);
+
   return (
     <Styles
       ref={rootElem}
@@ -853,14 +854,17 @@ export default function SupersetPluginChartLeafletGobar(props: SupersetPluginCha
           {data !== null && data.map(item => {
             const x = Number(item[latitude]);
             const y = Number(item[longitude]);
+            let popup
+            if (showPopup) {
+              popup = <Popup><div dangerouslySetInnerHTML={{ __html: eval(jsFunct) }} /></Popup>
+            }
+
             return (
               <Marker
                 position={[x, y]}
                 icon={new Icon({ iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41] })}
               >
-                <Popup>
-                  <div dangerouslySetInnerHTML={{ __html: eval(jsFunct) }} />
-                </Popup>
+                {popup}
               </Marker>
             )
           })}

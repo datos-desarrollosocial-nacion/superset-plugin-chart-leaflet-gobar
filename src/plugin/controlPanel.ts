@@ -75,12 +75,24 @@ const config: ControlPanelConfig = {
         ],
         [
           {
+            name: 'show_popup',
+            config: {
+              type: 'CheckboxControl',
+              label: t('Show popup'),
+              description: t('Whether to display the popup.'),
+            },
+          },
+        ],
+        [
+          {
             name: 'js_funct',
             config: {
               type: 'TextAreaControl',
               label: t('Function to parse popup'),
               height: 100,
               description: t('Function to pass data to popup'),
+              default: '',
+              language: 'javascript',
             },
           },
         ],

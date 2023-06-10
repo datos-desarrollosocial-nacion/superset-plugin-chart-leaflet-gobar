@@ -44,4 +44,5 @@ export type SupersetPluginChartLeafletGobarProps = SupersetPluginChartLeafletGob
     centerLon: 'string',
     tilelayer: 'string',
     attribution: 'string',
+    showPopup: 'boolean',
   };
