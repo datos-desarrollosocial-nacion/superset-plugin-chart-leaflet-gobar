@@ -37,6 +37,7 @@ export default class SupersetPluginChartLeafletGobar extends ChartPlugin {
     const metadata = new ChartMetadata({
       description: 'Leaflet marker plugin',
       name: t('Leaflet Marker - Argentina'),
+      category: t('Map'),
       thumbnail,
     });
 
